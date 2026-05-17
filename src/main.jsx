@@ -5,6 +5,7 @@ import App from './App.jsx'
 import SupportAgent from './SupportAgent.jsx'
 import MeetingAgent from './MeetingAgent.jsx'
 import ResearchAgent from './ResearchAgent.jsx'
+import PdfAgent from './PdfAgent.jsx'
 
 function Root() {
   const [tab, setTab] = useState('support');
@@ -14,6 +15,7 @@ function Root() {
     { id: 'router', label: '⚡ Router' },
     { id: 'meeting', label: '📅 Meeting' },
     { id: 'research', label: '🔎 Research' },
+    { id: 'pdf', label: '📄 PDF' },
   ];
 
   return (
@@ -43,7 +45,7 @@ function Root() {
         </div>
       </div>
       <div style={{ paddingTop: '44px', height: '100vh', boxSizing: 'border-box' }}>
-        {tab === 'support' ? <SupportAgent /> : tab === 'meeting' ? <MeetingAgent /> : tab === 'research' ? <ResearchAgent /> : <App />}
+        {tab === 'support' ? <SupportAgent /> : tab === 'meeting' ? <MeetingAgent /> : tab === 'research' ? <ResearchAgent /> : tab === 'pdf' ? <PdfAgent /> : <App />}
       </div>
     </>
   );
