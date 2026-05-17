@@ -15,34 +15,31 @@ export default function AgentCard({ agent, active, onClick }) {
     <button
       onClick={onClick}
       style={{
-        background: active
-          ? `linear-gradient(135deg, ${color}18, ${color}08)`
-          : 'var(--bg-panel)',
-        border: `1px solid ${active ? color + '60' : 'var(--border)'}`,
-        borderRadius: 'var(--radius)',
-        padding: '14px 16px',
+        background: active ? 'rgba(255,255,255,0.03)' : 'transparent',
+        border: `1px solid ${active ? 'var(--border-active)' : 'transparent'}`,
+        borderRadius: '16px',
+        padding: '12px 14px',
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
+        gap: '14px',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         textAlign: 'left',
         width: '100%',
-        boxShadow: active ? `0 0 20px ${color}20` : 'none',
       }}
       onMouseEnter={e => {
-        if (!active) e.currentTarget.style.background = 'var(--bg-panel-hover)';
+        if (!active) e.currentTarget.style.background = 'var(--bg-panel)';
       }}
       onMouseLeave={e => {
-        if (!active) e.currentTarget.style.background = 'var(--bg-panel)';
+        if (!active) e.currentTarget.style.background = 'transparent';
       }}
     >
       <span style={{
-        fontSize: '22px',
-        width: '38px', height: '38px',
+        fontSize: '20px',
+        width: '32px', height: '32px',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: `${color}18`,
-        borderRadius: '10px',
+        background: 'var(--bg-panel)',
+        borderRadius: '8px',
         flexShrink: 0,
       }}>{agent.icon}</span>
       <div style={{ minWidth: 0 }}>

@@ -26,12 +26,11 @@ function HandoffCard({ handoff }) {
   const c = handoff.agent.color;
   return (
     <div style={{
-      background: `linear-gradient(135deg, ${c}12, ${c}06)`,
-      border: `1px solid ${c}40`,
-      borderRadius: 'var(--radius)',
-      padding: '18px 20px',
+      background: 'rgba(255,255,255,0.02)',
+      border: '1px solid var(--border)',
+      borderRadius: '20px',
+      padding: '20px 24px',
       marginTop: '12px',
-      boxShadow: `0 0 24px ${c}15`,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
         <span style={{ fontSize: '20px' }}>{handoff.agent.icon}</span>
@@ -75,15 +74,15 @@ function HandoffCard({ handoff }) {
 
 function Row({ label, value, color }) {
   return (
-    <div style={{ marginBottom: '8px' }}>
-      <span style={{ fontSize: '11px', fontWeight: 600, color: color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
-      <p style={{ fontSize: '13px', color: 'var(--text-primary)', marginTop: '2px', lineHeight: 1.5 }}>{value}</p>
+    <div style={{ marginBottom: '12px' }}>
+      <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{label}</span>
+      <p style={{ fontSize: '14px', color: 'var(--text-primary)', marginTop: '4px', lineHeight: 1.5, fontWeight: 500 }}>{value}</p>
     </div>
   );
 }
 
 function Label({ children }) {
-  return <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>{children}</div>;
+  return <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>{children}</div>;
 }
 
 function Chip({ text, color }) {
@@ -100,9 +99,9 @@ function Chip({ text, color }) {
 export default function ChatBubble({ msg, typing }) {
   if (typing) {
     return (
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '18px' }}>
+      <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
         <BotAvatar />
-        <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: '0 var(--radius) var(--radius) var(--radius)' }}>
+        <div style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: '4px 20px 20px 20px' }}>
           <TypingDots />
         </div>
       </div>
@@ -115,8 +114,8 @@ export default function ChatBubble({ msg, typing }) {
     <div style={{
       display: 'flex',
       flexDirection: isUser ? 'row-reverse' : 'row',
-      gap: '10px',
-      marginBottom: '18px',
+      gap: '16px',
+      marginBottom: '24px',
       animation: 'fadeSlide 0.3s ease',
     }}>
       <style>{`
@@ -126,24 +125,22 @@ export default function ChatBubble({ msg, typing }) {
         }
       `}</style>
       {!isUser && <BotAvatar />}
-      <div style={{ maxWidth: '75%' }}>
+      <div style={{ maxWidth: '85%' }}>
         <div style={{
-          background: isUser
-            ? 'linear-gradient(135deg, #4c6ef5, #7950f2)'
-            : 'var(--bg-panel)',
-          border: isUser ? 'none' : '1px solid var(--border)',
+          background: 'var(--bg-panel)',
+          border: '1px solid var(--border)',
           borderRadius: isUser
-            ? 'var(--radius) 0 var(--radius) var(--radius)'
-            : '0 var(--radius) var(--radius) var(--radius)',
-          padding: '12px 16px',
-          fontSize: '14px',
+            ? '20px 20px 4px 20px'
+            : '4px 20px 20px 20px',
+          padding: '16px 20px',
+          fontSize: '15px',
           lineHeight: 1.6,
           color: 'var(--text-primary)',
         }}>
           {msg.text}
         </div>
         {msg.handoff && <HandoffCard handoff={msg.handoff} />}
-        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', textAlign: isUser ? 'right' : 'left' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px', textAlign: isUser ? 'right' : 'left' }}>
           {msg.time}
         </div>
       </div>
@@ -154,10 +151,10 @@ export default function ChatBubble({ msg, typing }) {
 function BotAvatar() {
   return (
     <div style={{
-      width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0,
-      background: 'linear-gradient(135deg, #4c6ef5, #b794f4)',
+      width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0,
+      background: 'var(--bg-deep)', border: '1px solid var(--border)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: '16px', boxShadow: '0 0 12px rgba(76,110,245,0.4)',
-    }}>🤖</div>
+      fontSize: '18px'
+    }}>⚡</div>
   );
 }

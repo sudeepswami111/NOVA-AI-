@@ -78,38 +78,30 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative' }}>
-      {/* Background orbs */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(76,110,245,0.12), transparent 70%)', filter: 'blur(60px)' }} />
-        <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(183,148,244,0.1), transparent 70%)', filter: 'blur(60px)' }} />
-      </div>
-
       {/* Sidebar */}
       <aside style={{
-        width: '260px', flexShrink: 0, borderRight: '1px solid var(--border)',
-        background: 'var(--bg-surface)', display: 'flex', flexDirection: 'column',
-        zIndex: 1, position: 'relative',
+        width: '300px', flexShrink: 0, borderRight: '1px solid var(--border)',
+        background: 'var(--bg-deep)', display: 'flex', flexDirection: 'column',
+        zIndex: 1, padding: '32px 24px', position: 'relative',
       }}>
-        <div style={{ padding: '22px 18px 16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-            <div style={{
-              width: '32px', height: '32px', borderRadius: '8px',
-              background: 'linear-gradient(135deg, #4c6ef5, #b794f4)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '16px', boxShadow: '0 0 16px rgba(76,110,245,0.4)',
-            }}>⚡</div>
-            <div>
-              <div style={{ fontWeight: 800, fontSize: '14px', letterSpacing: '-0.01em' }}>AI NOVA</div>
-              <div style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Business Router Agent</div>
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '40px' }}>
+          <div style={{
+            width: '40px', height: '40px', borderRadius: '12px',
+            background: 'var(--bg-panel)', border: '1px solid var(--border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '18px',
+          }}>⚡</div>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '16px' }}>Main Router</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>AI NOVA Workspace</div>
           </div>
         </div>
 
-        <div style={{ padding: '0 12px 12px', flex: 1, overflowY: 'auto' }}>
-          <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px', paddingLeft: '4px' }}>
-            Specialist Agents
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
+            Available Agents
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {AGENTS.map(agent => (
               <AgentCard
                 key={agent.id}
@@ -121,25 +113,23 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ padding: '12px 18px', borderTop: '1px solid var(--border)', fontSize: '11px', color: 'var(--text-muted)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#68d391', display: 'inline-block', boxShadow: '0 0 6px #68d391' }} />
-            Router online · 5 agents ready
-          </div>
+        <div style={{ marginTop: 'auto', padding: '16px 0 0', borderTop: '1px solid var(--border)', fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', marginRight: '8px' }} />
+          Online · {AGENTS.length} ready
         </div>
       </aside>
 
       {/* Main */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', zIndex: 1, minWidth: 0 }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', zIndex: 1, minWidth: 0, background: 'var(--bg-surface)' }}>
         {/* Header */}
         <header style={{
-          padding: '16px 28px', borderBottom: '1px solid var(--border)',
+          padding: '24px 40px', borderBottom: '1px solid var(--border)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'rgba(13,18,37,0.8)', backdropFilter: 'blur(12px)',
+          background: 'var(--bg-surface)',
         }}>
           <div>
-            <h1 style={{ fontSize: '16px', fontWeight: 700, margin: 0 }}>Main Router Agent</h1>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>Routes your requests to the right specialist instantly</p>
+            <h1 style={{ fontSize: '20px', fontWeight: 500, margin: 0 }}>Main Router</h1>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: '4px 0 0' }}>Routes your requests to the right specialist instantly</p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             {AGENTS.map(a => (
@@ -156,7 +146,7 @@ export default function App() {
         </header>
 
         {/* Chat */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px' }}>
           {messages.map((msg, i) => (
             <ChatBubble key={i} msg={msg} />
           ))}
@@ -165,16 +155,16 @@ export default function App() {
         </div>
 
         {/* Quick prompts */}
-        <div style={{ padding: '0 28px 10px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ padding: '0 40px 16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {QUICK.map((q, i) => (
             <button key={i} onClick={() => handleQuickPrompt(q)} style={{
-              background: 'var(--bg-panel)', border: '1px solid var(--border)',
-              borderRadius: '99px', padding: '5px 12px', fontSize: '12px',
+              background: 'transparent', border: '1px solid var(--border)',
+              borderRadius: '99px', padding: '8px 16px', fontSize: '13px',
               color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.2s',
               whiteSpace: 'nowrap',
             }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderColor = 'var(--border-active)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.background = 'var(--bg-panel)'; e.currentTarget.style.borderColor = 'var(--border-active)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--border)'; }}
             >
               {AGENTS[i]?.icon} {q}
             </button>
@@ -182,11 +172,11 @@ export default function App() {
         </div>
 
         {/* Input */}
-        <div style={{ padding: '12px 28px 20px' }}>
+        <div style={{ padding: '16px 40px 40px' }}>
           <div style={{
-            display: 'flex', gap: '10px', alignItems: 'flex-end',
-            background: 'var(--bg-panel)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius)', padding: '10px 14px',
+            display: 'flex', gap: '12px', alignItems: 'flex-end',
+            background: 'var(--bg-deep)', border: '1px solid var(--border)',
+            borderRadius: '24px', padding: '12px 16px',
             transition: 'border-color 0.2s',
           }}
             onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--border-active)'}
@@ -197,31 +187,30 @@ export default function App() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Describe your task… e.g. 'A customer can't log in' or 'Schedule a meeting for Friday'"
+              placeholder="Describe your task… e.g. 'A customer can't log in' or 'Schedule a meeting'"
               rows={1}
               style={{
                 flex: 1, background: 'none', border: 'none', outline: 'none',
-                color: 'var(--text-primary)', fontSize: '14px', resize: 'none',
+                color: 'var(--text-primary)', fontSize: '15px', resize: 'none',
                 lineHeight: 1.6, fontFamily: 'inherit', maxHeight: '120px',
+                padding: '4px',
               }}
             />
             <button
               onClick={handleSend}
               disabled={!input.trim()}
               style={{
-                width: '36px', height: '36px', borderRadius: '10px', flexShrink: 0,
-                background: input.trim()
-                  ? 'linear-gradient(135deg, #4c6ef5, #7950f2)'
-                  : 'var(--bg-panel-hover)',
+                width: '40px', height: '40px', borderRadius: '16px', flexShrink: 0,
+                background: input.trim() ? 'var(--text-primary)' : 'var(--bg-panel)',
+                color: input.trim() ? 'var(--bg-deep)' : 'var(--text-muted)',
                 border: 'none', cursor: input.trim() ? 'pointer' : 'not-allowed',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '16px', transition: 'all 0.2s',
-                boxShadow: input.trim() ? '0 0 14px rgba(76,110,245,0.4)' : 'none',
               }}
-            >➤</button>
+            >↑</button>
           </div>
-          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', textAlign: 'center' }}>
-            Press <kbd style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: '4px', padding: '1px 5px', fontSize: '10px' }}>Enter</kbd> to send · <kbd style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: '4px', padding: '1px 5px', fontSize: '10px' }}>Shift+Enter</kbd> for new line
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', textAlign: 'center' }}>
+            Press <kbd style={{ background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: '4px', padding: '2px 6px', fontSize: '11px', fontFamily: 'inherit' }}>Enter</kbd> to send
           </p>
         </div>
       </main>

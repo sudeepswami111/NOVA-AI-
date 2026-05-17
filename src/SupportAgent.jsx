@@ -7,9 +7,9 @@ import {
 } from './data/knowledgeBase.js';
 
 const PRIORITY_COLORS = {
-  Low: { color: '#68d391', bg: 'rgba(104,211,145,0.12)', border: 'rgba(104,211,145,0.3)' },
-  Medium: { color: '#f6ad55', bg: 'rgba(246,173,85,0.12)', border: 'rgba(246,173,85,0.3)' },
-  High: { color: '#fc8181', bg: 'rgba(252,129,129,0.12)', border: 'rgba(252,129,129,0.3)' },
+  Low: { color: '#10b981', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.2)' },
+  Medium: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.2)' },
+  High: { color: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.2)' },
 };
 
 function now() {
@@ -74,27 +74,28 @@ function ToolStep({ step }) {
 
   return (
     <div style={{
-      display: 'flex', alignItems: 'flex-start', gap: '10px',
-      padding: '8px 12px',
-      background: 'rgba(255,255,255,0.03)',
-      borderRadius: '8px',
-      borderLeft: `2px solid ${step.status === 'done' ? '#68d391' : '#63b3ed'}`,
-      marginBottom: '6px',
+      display: 'flex', alignItems: 'flex-start', gap: '12px',
+      padding: '10px 14px',
+      background: 'rgba(255,255,255,0.02)',
+      borderRadius: '12px',
+      border: '1px solid rgba(255,255,255,0.04)',
+      borderLeft: `3px solid ${step.status === 'done' ? '#10b981' : '#3b82f6'}`,
+      marginBottom: '8px',
       animation: 'fadeSlide 0.3s ease',
     }}>
-      <span style={{ fontSize: '14px' }}>{icons[step.tool]}</span>
+      <span style={{ fontSize: '15px' }}>{icons[step.tool]}</span>
       <div>
-        <div style={{ fontSize: '12px', fontWeight: 600, color: '#a0aec0', fontFamily: 'monospace' }}>
+        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', fontFamily: 'monospace' }}>
           {labels[step.tool]}
           <span style={{
-            marginLeft: '8px', fontSize: '10px', fontWeight: 700,
-            color: step.status === 'done' ? '#68d391' : '#63b3ed',
+            marginLeft: '8px', fontSize: '11px', fontWeight: 600,
+            color: step.status === 'done' ? '#10b981' : '#3b82f6',
           }}>
             {step.status === 'done' ? '✓ done' : '⟳ running'}
           </span>
         </div>
         {step.result && (
-          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{step.result}</div>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{step.result}</div>
         )}
       </div>
     </div>
@@ -106,58 +107,58 @@ function ResponseCard({ msg }) {
 
   return (
     <div style={{
-      background: 'var(--bg-panel)',
+      background: 'rgba(255,255,255,0.02)',
       border: '1px solid var(--border)',
-      borderRadius: 'var(--radius)',
-      padding: '18px 20px',
+      borderRadius: '20px',
+      padding: '24px',
       animation: 'fadeSlide 0.3s ease',
     }}>
       {/* Tool call trace */}
       {msg.steps?.length > 0 && (
-        <div style={{ marginBottom: '14px' }}>
-          <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
+        <div style={{ marginBottom: '20px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '12px' }}>
             Tool Call Sequence
           </div>
           {msg.steps.map((s, i) => <ToolStep key={i} step={s} />)}
         </div>
       )}
 
-      <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '14px 0' }} />
+      {msg.steps?.length > 0 && <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '20px 0' }} />}
 
       {/* Answer */}
-      <div style={{ marginBottom: '12px' }}>
+      <div style={{ marginBottom: '16px' }}>
         <Label>Answer</Label>
-        <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--text-primary)' }}>{msg.answer}</p>
+        <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--text-primary)', fontWeight: 400 }}>{msg.answer}</p>
       </div>
 
       {/* Source */}
-      <div style={{ marginBottom: msg.ticket ? '12px' : '0' }}>
+      <div style={{ marginBottom: msg.ticket ? '16px' : '0' }}>
         <Label>Source</Label>
         {msg.source ? (
           <span style={{
-            fontSize: '12px', background: 'rgba(99,179,237,0.1)',
-            border: '1px solid rgba(99,179,237,0.3)', borderRadius: '6px',
-            padding: '3px 10px', color: '#63b3ed',
+            fontSize: '13px', background: 'rgba(59,130,246,0.1)',
+            border: '1px solid rgba(59,130,246,0.2)', borderRadius: '8px',
+            padding: '4px 12px', color: '#3b82f6', display: 'inline-flex', alignItems: 'center', gap: '6px'
           }}>📄 {msg.source}</span>
         ) : (
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>—</span>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>—</span>
         )}
       </div>
 
       {/* Ticket */}
       {msg.ticket && (
-        <div style={{ marginTop: '12px' }}>
+        <div style={{ marginTop: '16px' }}>
           <Label>Ticket Created</Label>
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '10px',
-            background: 'rgba(104,211,145,0.08)', border: '1px solid rgba(104,211,145,0.25)',
-            borderRadius: '8px', padding: '8px 14px',
+            display: 'inline-flex', alignItems: 'center', gap: '12px',
+            background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)',
+            borderRadius: '12px', padding: '10px 16px',
           }}>
-            <span style={{ fontSize: '13px', fontWeight: 700, color: '#68d391' }}>✓ {msg.ticket.id}</span>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#10b981' }}>✓ {msg.ticket.id}</span>
             <span style={{
-              fontSize: '11px', fontWeight: 700,
+              fontSize: '12px', fontWeight: 600,
               background: pColors.bg, border: `1px solid ${pColors.border}`,
-              borderRadius: '99px', padding: '2px 8px', color: pColors.color,
+              borderRadius: '99px', padding: '4px 10px', color: pColors.color,
             }}>{msg.ticket.priority} Priority</span>
           </div>
         </div>
@@ -168,7 +169,7 @@ function ResponseCard({ msg }) {
 
 function Label({ children }) {
   return (
-    <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+    <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
       {children}
     </div>
   );
@@ -267,68 +268,65 @@ export default function SupportAgent() {
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative' }}>
-      {/* Background orbs */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: '450px', height: '450px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(104,211,145,0.1), transparent 70%)', filter: 'blur(60px)' }} />
-        <div style={{ position: 'absolute', bottom: '-10%', left: '-5%', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,179,237,0.1), transparent 70%)', filter: 'blur(60px)' }} />
-      </div>
-
       {/* Sidebar */}
       <aside style={{
-        width: '270px', flexShrink: 0, borderRight: '1px solid var(--border)',
-        background: 'var(--bg-surface)', display: 'flex', flexDirection: 'column',
-        zIndex: 1, padding: '22px 16px',
+        width: '300px', flexShrink: 0, borderRight: '1px solid var(--border)',
+        background: 'var(--bg-deep)', display: 'flex', flexDirection: 'column',
+        zIndex: 1, padding: '32px 24px',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '40px' }}>
           <div style={{
-            width: '36px', height: '36px', borderRadius: '10px',
-            background: 'linear-gradient(135deg, #63b3ed, #68d391)',
+            width: '40px', height: '40px', borderRadius: '12px',
+            background: 'var(--bg-panel)', border: '1px solid var(--border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '18px', boxShadow: '0 0 16px rgba(99,179,237,0.4)',
+            fontSize: '18px'
           }}>🎧</div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '15px' }}>Support Agent</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>AI NOVA · Customer Help</div>
+            <div style={{ fontWeight: 600, fontSize: '16px' }}>Support Agent</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>AI NOVA Workspace</div>
           </div>
         </div>
 
         {/* Customer name */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '6px' }}>
-            Customer Name (optional)
+        <div style={{ marginBottom: '32px' }}>
+          <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '10px' }}>
+            Customer Name
           </label>
           <input
             value={customerName}
             onChange={e => setCustomerName(e.target.value)}
-            placeholder="e.g. John Doe"
+            placeholder="e.g. Jane Doe"
             style={{
-              width: '100%', background: 'var(--bg-panel)', border: '1px solid var(--border)',
-              borderRadius: '8px', padding: '8px 12px', color: 'var(--text-primary)',
-              fontSize: '13px', outline: 'none', fontFamily: 'inherit',
+              width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid var(--border)',
+              padding: '8px 0', color: 'var(--text-primary)',
+              fontSize: '14px', outline: 'none', fontFamily: 'inherit',
+              transition: 'border-color 0.2s'
             }}
+            onFocus={e => e.target.style.borderBottomColor = 'var(--text-secondary)'}
+            onBlur={e => e.target.style.borderBottomColor = 'var(--border)'}
           />
         </div>
 
         {/* Tool pipeline */}
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>
-            Tool Pipeline
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
+            Pipeline
           </div>
           {[
-            { icon: '📁', label: 'search_documents()', desc: 'Product docs & past tickets' },
-            { icon: '❓', label: 'search_faq()', desc: 'FAQs, pricing & policies' },
-            { icon: '🎫', label: 'create_support_ticket()', desc: 'Escalate if no answer found' },
+            { icon: '📁', label: 'search_documents()', desc: 'Docs & Tickets' },
+            { icon: '❓', label: 'search_faq()', desc: 'Pricing & Policies' },
+            { icon: '🎫', label: 'create_ticket()', desc: 'Escalation' },
           ].map((t, i) => (
-            <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '10px' }}>
+            <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '14px', opacity: 0.8 }}>
               <div style={{
-                width: '22px', height: '22px', borderRadius: '50%',
-                background: 'var(--bg-panel)', border: '1px solid var(--border)',
+                width: '28px', height: '28px', borderRadius: '8px',
+                background: 'rgba(255,255,255,0.03)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '11px', flexShrink: 0, fontWeight: 700, color: 'var(--text-secondary)',
-              }}>{i + 1}</div>
+                fontSize: '13px', flexShrink: 0,
+              }}>{t.icon}</div>
               <div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{t.label}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{t.desc}</div>
+                <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{t.label}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{t.desc}</div>
               </div>
             </div>
           ))}
@@ -336,54 +334,54 @@ export default function SupportAgent() {
 
         {/* Priority legend */}
         <div>
-          <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>
+          <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
             Ticket Priority
           </div>
           {Object.entries(PRIORITY_COLORS).map(([label, c]) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: c.color, display: 'inline-block' }} />
-              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{label}</span>
+            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: c.color, display: 'inline-block' }} />
+              <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{label}</span>
             </div>
           ))}
         </div>
 
-        <div style={{ marginTop: 'auto', padding: '12px 0 0', borderTop: '1px solid var(--border)', fontSize: '11px', color: 'var(--text-muted)' }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#68d391', display: 'inline-block', boxShadow: '0 0 6px #68d391', marginRight: '6px' }} />
-          Support agent online
+        <div style={{ marginTop: 'auto', padding: '16px 0 0', borderTop: '1px solid var(--border)', fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', marginRight: '8px' }} />
+          Online
         </div>
       </aside>
 
       {/* Main */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', zIndex: 1, minWidth: 0 }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', zIndex: 1, minWidth: 0, background: 'var(--bg-surface)' }}>
         {/* Header */}
         <header style={{
-          padding: '16px 28px', borderBottom: '1px solid var(--border)',
-          background: 'rgba(13,18,37,0.85)', backdropFilter: 'blur(12px)',
+          padding: '24px 40px', borderBottom: '1px solid var(--border)',
+          background: 'var(--bg-surface)',
         }}>
-          <h1 style={{ fontSize: '16px', fontWeight: 700, margin: 0 }}>Customer Support</h1>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>
-            Searches docs → FAQs → creates ticket if no answer found
+          <h1 style={{ fontSize: '20px', fontWeight: 500, margin: 0 }}>Customer Support</h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: '4px 0 0' }}>
+            Intelligent routing and knowledge base search
           </p>
         </header>
 
         {/* Messages */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px' }}>
           {messages.length === 0 && !loading && (
-            <div style={{ textAlign: 'center', marginTop: '40px' }}>
-              <div style={{ fontSize: '40px', marginBottom: '12px' }}>🎧</div>
-              <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>How can we help you?</h2>
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '28px' }}>
-                Ask any question. I'll search the knowledge base before escalating.
+            <div style={{ textAlign: 'center', marginTop: '60px' }}>
+              <div style={{ fontSize: '48px', marginBottom: '24px', opacity: 0.8 }}>👋</div>
+              <h2 style={{ fontSize: '24px', fontWeight: 500, marginBottom: '12px', color: 'var(--text-primary)' }}>How can we help?</h2>
+              <p style={{ fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '40px' }}>
+                Ask a question, and I'll search the knowledge base before escalating.
               </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', maxWidth: '560px', margin: '0 auto' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', maxWidth: '640px', margin: '0 auto' }}>
                 {SUGGESTIONS.map((s, i) => (
                   <button key={i} onClick={() => { setInput(s); inputRef.current?.focus(); }} style={{
-                    background: 'var(--bg-panel)', border: '1px solid var(--border)',
-                    borderRadius: '99px', padding: '7px 14px', fontSize: '13px',
+                    background: 'transparent', border: '1px solid var(--border)',
+                    borderRadius: '99px', padding: '10px 20px', fontSize: '14px',
                     color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.2s',
                   }}
-                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderColor = 'rgba(99,179,237,0.4)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.background = 'var(--bg-panel)'; e.currentTarget.style.borderColor = 'var(--border-active)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--border)'; }}
                   >{s}</button>
                 ))}
               </div>
@@ -391,29 +389,29 @@ export default function SupportAgent() {
           )}
 
           {messages.map((msg, i) => (
-            <div key={i} style={{ marginBottom: '20px', animation: 'fadeSlide 0.3s ease' }}>
+            <div key={i} style={{ marginBottom: '32px', animation: 'fadeSlide 0.3s ease' }}>
               {msg.role === 'user' ? (
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <div style={{ maxWidth: '70%' }}>
+                  <div style={{ maxWidth: '75%' }}>
                     <div style={{
-                      background: 'linear-gradient(135deg, #4c6ef5, #7950f2)',
-                      borderRadius: 'var(--radius) 0 var(--radius) var(--radius)',
-                      padding: '12px 16px', fontSize: '14px', lineHeight: 1.6,
+                      background: 'var(--bg-panel)', border: '1px solid var(--border)',
+                      borderRadius: '20px 20px 4px 20px',
+                      padding: '16px 20px', fontSize: '15px', lineHeight: 1.6,
+                      color: 'var(--text-primary)'
                     }}>{msg.text}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'right' }}>{msg.time}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px', textAlign: 'right' }}>{msg.time}</div>
                   </div>
                 </div>
               ) : (
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '16px' }}>
                   <div style={{
-                    width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0,
-                    background: 'linear-gradient(135deg, #63b3ed, #68d391)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px',
-                    boxShadow: '0 0 12px rgba(99,179,237,0.35)',
-                  }}>🎧</div>
-                  <div style={{ flex: 1 }}>
+                    width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0,
+                    background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px',
+                  }}>🤖</div>
+                  <div style={{ flex: 1, maxWidth: '85%' }}>
                     <ResponseCard msg={msg} />
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>{msg.time}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>{msg.time}</div>
                   </div>
                 </div>
               )}
@@ -422,14 +420,14 @@ export default function SupportAgent() {
 
           {/* Live steps while processing */}
           {loading && stepsLive.length > 0 && (
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
               <div style={{
-                width: '34px', height: '34px', borderRadius: '50%', flexShrink: 0,
-                background: 'linear-gradient(135deg, #63b3ed, #68d391)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px',
-              }}>🎧</div>
-              <div style={{ flex: 1, background: 'var(--bg-panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '16px 18px' }}>
-                <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>
+                width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0,
+                background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px',
+              }}>🤖</div>
+              <div style={{ flex: 1, maxWidth: '85%', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '20px', padding: '24px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
                   Searching knowledge base…
                 </div>
                 {stepsLive.map((s, i) => <ToolStep key={i} step={s} />)}
@@ -441,14 +439,14 @@ export default function SupportAgent() {
         </div>
 
         {/* Input */}
-        <div style={{ padding: '12px 28px 20px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ padding: '24px 40px 40px', background: 'var(--bg-surface)' }}>
           <div style={{
-            display: 'flex', gap: '10px', alignItems: 'flex-end',
-            background: 'var(--bg-panel)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius)', padding: '10px 14px',
+            display: 'flex', gap: '12px', alignItems: 'flex-end',
+            background: 'var(--bg-deep)', border: '1px solid var(--border)',
+            borderRadius: '24px', padding: '12px 16px',
             transition: 'border-color 0.2s',
           }}
-            onFocusCapture={e => e.currentTarget.style.borderColor = 'rgba(99,179,237,0.4)'}
+            onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--border-active)'}
             onBlurCapture={e => e.currentTarget.style.borderColor = 'var(--border)'}
           >
             <textarea
@@ -456,29 +454,27 @@ export default function SupportAgent() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Ask a customer support question…"
+              placeholder="Message Support Agent..."
               rows={1}
               disabled={loading}
               style={{
                 flex: 1, background: 'none', border: 'none', outline: 'none',
-                color: 'var(--text-primary)', fontSize: '14px', resize: 'none',
+                color: 'var(--text-primary)', fontSize: '15px', resize: 'none',
                 lineHeight: 1.6, fontFamily: 'inherit', maxHeight: '120px',
-                opacity: loading ? 0.5 : 1,
+                padding: '4px', opacity: loading ? 0.5 : 1,
               }}
             />
             <button onClick={handleSend} disabled={!input.trim() || loading} style={{
-              width: '36px', height: '36px', borderRadius: '10px', flexShrink: 0,
-              background: input.trim() && !loading
-                ? 'linear-gradient(135deg, #63b3ed, #68d391)'
-                : 'var(--bg-panel-hover)',
+              width: '40px', height: '40px', borderRadius: '16px', flexShrink: 0,
+              background: input.trim() && !loading ? 'var(--text-primary)' : 'var(--bg-panel)',
+              color: input.trim() && !loading ? 'var(--bg-deep)' : 'var(--text-muted)',
               border: 'none', cursor: input.trim() && !loading ? 'pointer' : 'not-allowed',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: '16px', transition: 'all 0.2s',
-              boxShadow: input.trim() && !loading ? '0 0 14px rgba(99,179,237,0.4)' : 'none',
-            }}>➤</button>
+            }}>↑</button>
           </div>
-          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', textAlign: 'center' }}>
-            Searches docs → FAQs → escalates to ticket if no answer found
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', textAlign: 'center' }}>
+            Support agent may produce inaccurate information.
           </p>
         </div>
       </main>
