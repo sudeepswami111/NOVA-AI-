@@ -350,7 +350,7 @@ export default function MeetingAgent() {
   const canStart = (emailMode === 'select' && selectedEmail) || (emailMode === 'manual' && manualText.trim());
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
       <style>{`
         @keyframes fadeSlide { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }

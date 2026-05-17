@@ -267,7 +267,7 @@ export default function SupportAgent() {
   }
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative' }}>
+    <div style={{ display: 'flex', height: '100%', overflow: 'hidden', position: 'relative' }}>
       {/* Sidebar */}
       <aside style={{
         width: '300px', flexShrink: 0, borderRight: '1px solid var(--border)',

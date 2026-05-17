@@ -46,7 +46,7 @@ function Root() {
           ))}
         </div>
       </div>
-      <div style={{ paddingTop: '44px', height: '100vh', boxSizing: 'border-box' }}>
+      <div style={{ paddingTop: '58px', height: '100vh', boxSizing: 'border-box' }}>
         {tab === 'support' ? <SupportAgent /> : tab === 'meeting' ? <MeetingAgent /> : tab === 'research' ? <ResearchAgent /> : tab === 'pdf' ? <PdfAgent /> : tab === 'social' ? <SocialAgent /> : <App />}
       </div>
     </>

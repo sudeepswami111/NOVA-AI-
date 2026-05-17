@@ -114,7 +114,7 @@ export default function PdfAgent() {
   function reset() { setMode('idle'); setSelected(null); setSteps([]); setResult(null); }
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
       <style>{`@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
       {/* Sidebar */}
