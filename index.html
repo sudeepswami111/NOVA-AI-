@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Model Studio</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      color-scheme: light;
+      --ink: #18211f;
+      --muted: #62706c;
+      --line: #d9e0dc;
+      --paper: #f6f8f5;
+      --panel: #ffffff;
+      --rail: #121816;
+      --rail-soft: #1f2a26;
+      --green: #0f8a70;
+      --green-dark: #0b6a57;
+      --amber: #efb845;
+      --blue: #3e6f9e;
+      --red: #b64545;
+      --shadow: 0 18px 44px rgba(24, 33, 31, 0.12);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.72;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      min-width: 0;
+      background: var(--rail);
+      color: #f5f8f6;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      border-right: 1px solid #27342f;
+    }
+
+    .brand {
+      padding: 22px 20px 16px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      color: #aebcb6;
+      font-size: 13px;
+    }
+
+    .new-chat {
+      margin: 0 16px 16px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--green);
+      color: white;
+      font-weight: 800;
+    }
+
+    .model-list {
+      min-height: 0;
+      overflow: auto;
+      padding: 0 12px 16px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .model-button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      text-align: left;
+      border-radius: 8px;
+      padding: 12px;
+      background: transparent;
+      color: #e9f0ed;
+    }
+
+    .model-button:hover,
+    .model-button.active {
+      background: var(--rail-soft);
+    }
+
+    .model-name {
+      display: block;
+      overflow: hidden;
+      color: #f8fbf9;
+      font-size: 15px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .model-kind {
+      display: block;
+      color: #aebcb6;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .status-pill {
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: #101412;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status-ready {
+      background: #82d8bd;
+    }
+
+    .status-needs_training {
+      background: var(--amber);
+    }
+
+    .status-not_connected {
+      background: #d9dedb;
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid #27342f;
+      color: #aebcb6;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .main {
+      min-width: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .topbar {
+      min-width: 0;
+      height: 72px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246, 248, 245, 0.92);
+    }
+
+    .selected {
+      min-width: 0;
+    }
+
+    .selected h2 {
+      margin: 0;
+      overflow: hidden;
+      font-size: 20px;
+      letter-spacing: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .selected p {
+      margin: 4px 0 0;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .connection {
+      min-width: 110px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .content {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 1px;
+      background: var(--line);
+    }
+
+    .chat {
+      min-width: 0;
+      min-height: 0;
+      background: var(--paper);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .messages {
+      min-height: 0;
+      overflow: auto;
+      padding: 28px min(5vw, 64px);
+      display: grid;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .message {
+      width: min(760px, 100%);
+      display: grid;
+      gap: 7px;
+    }
+
+    .message.user {
+      justify-self: end;
+    }
+
+    .sender {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .bubble {
+      border-radius: 8px;
+      padding: 14px 16px;
+      line-height: 1.55;
+      box-shadow: 0 1px 0 rgba(24, 33, 31, 0.05);
+      white-space: pre-wrap;
+    }
+
+    .assistant .bubble {
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .user .bubble {
+      background: var(--green);
+      color: white;
+    }
+
+    .composer {
+      padding: 16px min(5vw, 64px) 22px;
+      background: linear-gradient(to top, var(--paper) 82%, rgba(246, 248, 245, 0));
+    }
+
+    .composer-box {
+      width: min(860px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    textarea {
+      min-height: 50px;
+      max-height: 150px;
+      resize: vertical;
+      border: 0;
+      outline: 0;
+      padding: 13px 12px;
+      color: var(--ink);
+      background: transparent;
+      line-height: 1.45;
+    }
+
+    .send {
+      width: 92px;
+      height: 48px;
+      border-radius: 8px;
+      background: var(--green);
+      color: white;
+      font-weight: 800;
+    }
+
+    .tools {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      background: #edf2ed;
+      padding: 20px;
+      display: grid;
+      align-content: start;
+      gap: 16px;
+    }
+
+    .tool-section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .tool-section h3 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .canvas-shell {
+      background: #111816;
+      border: 3px solid #17211d;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+    }
+
+    canvas {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #000;
+      border-radius: 6px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .tool-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .predict,
+    .clear {
+      height: 44px;
+      border-radius: 8px;
+      font-weight: 800;
+    }
+
+    .predict {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .clear {
+      background: var(--amber);
+      color: #201707;
+    }
+
+    .prediction-box {
+      min-height: 110px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      border-left: 4px solid var(--green);
+      background: #f8faf8;
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .digit {
+      min-width: 78px;
+      color: var(--ink);
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .prediction-copy {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+    }
+
+    .prediction-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .confidence {
+      color: #374944;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .connector-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .connector {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 5px;
+      background: #fbfcfb;
+    }
+
+    .connector strong {
+      font-size: 14px;
+    }
+
+    .connector span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .meter {
+      width: 100%;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #dfe7e2;
+    }
+
+    .meter-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--blue);
+      transition: width 180ms ease;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        grid-template-rows: auto auto auto;
+      }
+
+      .model-list {
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(220px, 1fr);
+        overflow-x: auto;
+        padding-bottom: 14px;
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+
+      .main {
+        height: auto;
+        min-height: 760px;
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .tools {
+        grid-row: 1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        height: auto;
+        padding: 16px;
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .connection {
+        width: 100%;
+      }
+
+      .messages,
+      .composer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .composer-box {
+        grid-template-columns: 1fr;
+      }
+
+      .send {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>AI Model Studio</h1>
+        <span>Local workspace</span>
+      </div>
+
+      <button class="new-chat" id="newChatButton">New Chat</button>
+
+      <nav class="model-list" id="modelList" aria-label="Models"></nav>
+
+      <div class="sidebar-footer">
+        Active model files stay on this computer. External model slots stay offline until you connect them.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="selected">
+          <h2 id="selectedModelName">Loading</h2>
+          <p id="selectedModelDetails">Checking local models</p>
+        </div>
+        <div class="connection" id="selectedModelStatus">Starting</div>
+      </header>
+
+      <section class="content">
+        <section class="chat" aria-label="Chat">
+          <div class="messages" id="messages"></div>
+
+          <form class="composer" id="chatForm">
+            <div class="composer-box">
+              <textarea id="chatInput" rows="1" placeholder="Message the selected model"></textarea>
+              <button class="send" id="sendButton" type="submit">Send</button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="tools">
+          <section class="tool-section">
+            <h3>MNIST Vision</h3>
+            <div class="canvas-shell">
+              <canvas id="drawingCanvas" width="280" height="280" aria-label="Drawing canvas"></canvas>
+            </div>
+
+            <div class="tool-actions">
+              <button class="predict" id="predictButton">Predict</button>
+              <button class="clear" id="clearButton">Clear</button>
+            </div>
+
+            <div class="prediction-box" aria-live="polite">
+              <div class="digit" id="digit">-</div>
+              <div class="prediction-copy">
+                <div class="prediction-label">Digit model</div>
+                <div class="confidence" id="confidence">Ready</div>
+                <div class="meter">
+                  <div class="meter-fill" id="meterFill"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="tool-section">
+            <h3>Model Connectors</h3>
+            <div class="connector-list" id="connectorList"></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const modelList = document.getElementById("modelList");
+    const connectorList = document.getElementById("connectorList");
+    const selectedModelName = document.getElementById("selectedModelName");
+    const selectedModelDetails = document.getElementById("selectedModelDetails");
+    const selectedModelStatus = document.getElementById("selectedModelStatus");
+    const messages = document.getElementById("messages");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const sendButton = document.getElementById("sendButton");
+    const newChatButton = document.getElementById("newChatButton");
+    const canvas = document.getElementById("drawingCanvas");
+    const context = canvas.getContext("2d");
+    const predictButton = document.getElementById("predictButton");
+    const clearButton = document.getElementById("clearButton");
+    const digitText = document.getElementById("digit");
+    const confidenceText = document.getElementById("confidence");
+    const meterFill = document.getElementById("meterFill");
+
+    let models = [];
+    let selectedModelId = "local-guide";
+    let isDrawing = false;
+    let hasDrawing = false;
+
+    function statusText(status) {
+      if (status === "ready") {
+        return "Ready";
+      }
+
+      if (status === "needs_training") {
+        return "Needs Training";
+      }
+
+      return "Not Connected";
+    }
+
+    function addMessage(sender, text) {
+      const message = document.createElement("article");
+      message.className = `message ${sender === "You" ? "user" : "assistant"}`;
+
+      const label = document.createElement("div");
+      label.className = "sender";
+      label.textContent = sender;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      message.append(label, bubble);
+      messages.append(message);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function resetChat() {
+      messages.innerHTML = "";
+      addMessage("Studio", "Your MNIST digit recognizer is live here. The other model slots are ready to connect when you add real APIs or local model servers.");
+    }
+
+    function selectModel(modelId) {
+      selectedModelId = modelId;
+      const model = models.find((item) => item.id === selectedModelId) || models[0];
+
+      selectedModelName.textContent = model.name;
+      selectedModelDetails.textContent = model.details;
+      selectedModelStatus.textContent = statusText(model.status);
+      selectedModelStatus.className = "connection";
+
+      document.querySelectorAll(".model-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.modelId === selectedModelId);
+      });
+    }
+
+    function renderModels() {
+      modelList.innerHTML = "";
+      connectorList.innerHTML = "";
+
+      models.forEach((model) => {
+        const button = document.createElement("button");
+        button.className = "model-button";
+        button.dataset.modelId = model.id;
+        button.type = "button";
+
+        const copy = document.createElement("span");
+        const name = document.createElement("span");
+        const kind = document.createElement("span");
+        const status = document.createElement("span");
+
+        name.className = "model-name";
+        kind.className = "model-kind";
+        status.className = `status-pill status-${model.status}`;
+
+        name.textContent = model.name;
+        kind.textContent = model.kind;
+        status.textContent = statusText(model.status);
+
+        copy.append(name, kind);
+        button.append(copy, status);
+        button.addEventListener("click", () => selectModel(model.id));
+        modelList.append(button);
+
+        const connector = document.createElement("div");
+        connector.className = "connector";
+        connector.innerHTML = `<strong>${model.name}</strong><span>${statusText(model.status)} · ${model.details}</span>`;
+        connectorList.append(connector);
+      });
+
+      selectModel(selectedModelId);
+    }
+
+    async function loadModels() {
+      const response = await fetch("/api/models");
+      const data = await response.json();
+      models = data.models;
+      renderModels();
+      resetChat();
+    }
+
+    async function sendChatMessage(event) {
+      event.preventDefault();
+
+      const message = chatInput.value.trim();
+
+      if (!message) {
+        return;
+      }
+
+      addMessage("You", message);
+      chatInput.value = "";
+      sendButton.disabled = true;
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: selectedModelId,
+            message
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.error) {
+          throw new Error(result.error || "The selected model did not respond.");
+        }
+
+        addMessage(selectedModelName.textContent, result.reply);
+      } catch (error) {
+        addMessage("Studio", error.message);
+      } finally {
+        sendButton.disabled = false;
+        chatInput.focus();
+      }
+    }
+
+    function clearCanvas() {
+      context.fillStyle = "#000000";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      digitText.textContent = "-";
+      confidenceText.textContent = "Ready";
+      meterFill.style.width = "0%";
+      hasDrawing = false;
+    }
+
+    function getPointerPosition(event) {
+      const bounds = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / bounds.width;
+      const scaleY = canvas.height / bounds.height;
+
+      return {
+        x: (event.clientX - bounds.left) * scaleX,
+        y: (event.clientY - bounds.top) * scaleY
+      };
+    }
+
+    function startDrawing(event) {
+      isDrawing = true;
+      hasDrawing = true;
+      context.beginPath();
+
+      const position = getPointerPosition(event);
+      context.moveTo(position.x, position.y);
+      event.preventDefault();
+    }
+
+    function draw(event) {
+      if (!isDrawing) {
+        return;
+      }
+
+      const position = getPointerPosition(event);
+      context.lineTo(position.x, position.y);
+      context.strokeStyle = "#ffffff";
+      context.lineWidth = 24;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.stroke();
+      event.preventDefault();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function getSmallPixelArray() {
+      const smallCanvas = document.createElement("canvas");
+      const smallContext = smallCanvas.getContext("2d");
+
+      smallCanvas.width = 28;
+      smallCanvas.height = 28;
+      smallContext.drawImage(canvas, 0, 0, 28, 28);
+
+      const imageData = smallContext.getImageData(0, 0, 28, 28).data;
+      const pixels = [];
+
+      for (let index = 0; index < imageData.length; index += 4) {
+        pixels.push(imageData[index] / 255);
+      }
+
+      return pixels;
+    }
+
+    async function predictDigit() {
+      if (!hasDrawing) {
+        confidenceText.textContent = "Draw a digit first";
+        return;
+      }
+
+      predictButton.disabled = true;
+      confidenceText.textContent = "Predicting";
+
+      try {
+        const response = await fetch("/api/digit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            pixels: getSmallPixelArray()
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.error) {
+          throw new Error(result.error || "Prediction failed.");
+        }
+
+        const percent = result.confidence * 100;
+        digitText.textContent = result.digit;
+        confidenceText.textContent = `${percent.toFixed(2)}% confidence`;
+        meterFill.style.width = `${Math.max(3, percent)}%`;
+        addMessage("MNIST Digit Recognizer", `Prediction: ${result.digit}\nConfidence: ${percent.toFixed(2)}%`);
+      } catch (error) {
+        digitText.textContent = "!";
+        confidenceText.textContent = error.message;
+        meterFill.style.width = "0%";
+      } finally {
+        predictButton.disabled = false;
+      }
+    }
+
+    clearCanvas();
+    loadModels();
+
+    chatForm.addEventListener("submit", sendChatMessage);
+    newChatButton.addEventListener("click", resetChat);
+    canvas.addEventListener("pointerdown", startDrawing);
+    canvas.addEventListener("pointermove", draw);
+    canvas.addEventListener("pointerup", stopDrawing);
+    canvas.addEventListener("pointerleave", stopDrawing);
+    clearButton.addEventListener("click", clearCanvas);
+    predictButton.addEventListener("click", predictDigit);
+  </script>
+</body>
+</html>
