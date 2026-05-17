@@ -4,14 +4,16 @@ import './index.css'
 import App from './App.jsx'
 import SupportAgent from './SupportAgent.jsx'
 import MeetingAgent from './MeetingAgent.jsx'
+import ResearchAgent from './ResearchAgent.jsx'
 
 function Root() {
   const [tab, setTab] = useState('support');
 
   const tabs = [
-    { id: 'support', label: '🎧 Support Agent' },
-    { id: 'router', label: '⚡ Router Agent' },
-    { id: 'meeting', label: '📅 Meeting Agent' },
+    { id: 'support', label: '🎧 Support' },
+    { id: 'router', label: '⚡ Router' },
+    { id: 'meeting', label: '📅 Meeting' },
+    { id: 'research', label: '🔎 Research' },
   ];
 
   return (
@@ -41,7 +43,7 @@ function Root() {
         </div>
       </div>
       <div style={{ paddingTop: '44px', height: '100vh', boxSizing: 'border-box' }}>
-        {tab === 'support' ? <SupportAgent /> : tab === 'meeting' ? <MeetingAgent /> : <App />}
+        {tab === 'support' ? <SupportAgent /> : tab === 'meeting' ? <MeetingAgent /> : tab === 'research' ? <ResearchAgent /> : <App />}
       </div>
     </>
   );
