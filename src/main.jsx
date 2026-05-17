@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import SupportAgent from './SupportAgent.jsx'
+import MeetingAgent from './MeetingAgent.jsx'
 
 function Root() {
   const [tab, setTab] = useState('support');
@@ -10,6 +11,7 @@ function Root() {
   const tabs = [
     { id: 'support', label: '🎧 Support Agent' },
     { id: 'router', label: '⚡ Router Agent' },
+    { id: 'meeting', label: '📅 Meeting Agent' },
   ];
 
   return (
@@ -39,7 +41,7 @@ function Root() {
         </div>
       </div>
       <div style={{ paddingTop: '44px', height: '100vh', boxSizing: 'border-box' }}>
-        {tab === 'support' ? <SupportAgent /> : <App />}
+        {tab === 'support' ? <SupportAgent /> : tab === 'meeting' ? <MeetingAgent /> : <App />}
       </div>
     </>
   );
